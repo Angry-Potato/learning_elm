@@ -1,50 +1,56 @@
 var _user$project$SeatSaver$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
+	function (action, model) {
+		var _p0 = action;
 		var updateSeat = function (seatFromModel) {
 			return _elm_lang$core$Native_Utils.eq(seatFromModel.seatNo, _p0._0.seatNo) ? _elm_lang$core$Native_Utils.update(
 				seatFromModel,
 				{occupied: !seatFromModel.occupied}) : seatFromModel;
 		};
-		return A2(_elm_lang$core$List$map, updateSeat, model);
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_elm_lang$core$List$map, updateSeat, model),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
 	});
-var _user$project$SeatSaver$init = {
-	ctor: '::',
-	_0: {seatNo: 1, occupied: false},
-	_1: {
+var _user$project$SeatSaver$init = function () {
+	var seats = {
 		ctor: '::',
-		_0: {seatNo: 2, occupied: false},
+		_0: {seatNo: 1, occupied: false},
 		_1: {
 			ctor: '::',
-			_0: {seatNo: 3, occupied: false},
+			_0: {seatNo: 2, occupied: false},
 			_1: {
 				ctor: '::',
-				_0: {seatNo: 4, occupied: false},
+				_0: {seatNo: 3, occupied: false},
 				_1: {
 					ctor: '::',
-					_0: {seatNo: 5, occupied: false},
+					_0: {seatNo: 4, occupied: false},
 					_1: {
 						ctor: '::',
-						_0: {seatNo: 6, occupied: false},
+						_0: {seatNo: 5, occupied: false},
 						_1: {
 							ctor: '::',
-							_0: {seatNo: 7, occupied: false},
+							_0: {seatNo: 6, occupied: false},
 							_1: {
 								ctor: '::',
-								_0: {seatNo: 8, occupied: false},
+								_0: {seatNo: 7, occupied: false},
 								_1: {
 									ctor: '::',
-									_0: {seatNo: 9, occupied: false},
+									_0: {seatNo: 8, occupied: false},
 									_1: {
 										ctor: '::',
-										_0: {seatNo: 10, occupied: false},
+										_0: {seatNo: 9, occupied: false},
 										_1: {
 											ctor: '::',
-											_0: {seatNo: 11, occupied: false},
+											_0: {seatNo: 10, occupied: false},
 											_1: {
 												ctor: '::',
-												_0: {seatNo: 12, occupied: false},
-												_1: {ctor: '[]'}
+												_0: {seatNo: 11, occupied: false},
+												_1: {
+													ctor: '::',
+													_0: {seatNo: 12, occupied: false},
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -55,8 +61,9 @@ var _user$project$SeatSaver$init = {
 				}
 			}
 		}
-	}
-};
+	};
+	return {ctor: '_Tuple2', _0: seats, _1: _elm_lang$core$Platform_Cmd$none};
+}();
 var _user$project$SeatSaver$Seat = F2(
 	function (a, b) {
 		return {seatNo: a, occupied: b};
@@ -96,5 +103,12 @@ var _user$project$SeatSaver$view = function (model) {
 		},
 		A2(_elm_lang$core$List$map, _user$project$SeatSaver$seatItem, model));
 };
-var _user$project$SeatSaver$main = _elm_lang$html$Html$beginnerProgram(
-	{model: _user$project$SeatSaver$init, update: _user$project$SeatSaver$update, view: _user$project$SeatSaver$view})();
+var _user$project$SeatSaver$main = _elm_lang$html$Html$program(
+	{
+		init: _user$project$SeatSaver$init,
+		update: _user$project$SeatSaver$update,
+		view: _user$project$SeatSaver$view,
+		subscriptions: function (_p1) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	})();

@@ -3746,6 +3746,203 @@ var _elm_lang$core$Result$fromMaybe = F2(
 		}
 	});
 
+var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
+var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
+var _elm_lang$core$Task$spawnCmd = F2(
+	function (router, _p0) {
+		var _p1 = _p0;
+		return _elm_lang$core$Native_Scheduler.spawn(
+			A2(
+				_elm_lang$core$Task$andThen,
+				_elm_lang$core$Platform$sendToApp(router),
+				_p1._0));
+	});
+var _elm_lang$core$Task$fail = _elm_lang$core$Native_Scheduler.fail;
+var _elm_lang$core$Task$mapError = F2(
+	function (convert, task) {
+		return A2(
+			_elm_lang$core$Task$onError,
+			function (_p2) {
+				return _elm_lang$core$Task$fail(
+					convert(_p2));
+			},
+			task);
+	});
+var _elm_lang$core$Task$succeed = _elm_lang$core$Native_Scheduler.succeed;
+var _elm_lang$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return _elm_lang$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return _elm_lang$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map3 = F4(
+	function (func, taskA, taskB, taskC) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return _elm_lang$core$Task$succeed(
+									A3(func, a, b, c));
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map4 = F5(
+	function (func, taskA, taskB, taskC, taskD) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return _elm_lang$core$Task$succeed(
+											A4(func, a, b, c, d));
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map5 = F6(
+	function (func, taskA, taskB, taskC, taskD, taskE) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return A2(
+											_elm_lang$core$Task$andThen,
+											function (e) {
+												return _elm_lang$core$Task$succeed(
+													A5(func, a, b, c, d, e));
+											},
+											taskE);
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$sequence = function (tasks) {
+	var _p3 = tasks;
+	if (_p3.ctor === '[]') {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '[]'});
+	} else {
+		return A3(
+			_elm_lang$core$Task$map2,
+			F2(
+				function (x, y) {
+					return {ctor: '::', _0: x, _1: y};
+				}),
+			_p3._0,
+			_elm_lang$core$Task$sequence(_p3._1));
+	}
+};
+var _elm_lang$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			_elm_lang$core$Task$map,
+			function (_p4) {
+				return {ctor: '_Tuple0'};
+			},
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Task$spawnCmd(router),
+					commands)));
+	});
+var _elm_lang$core$Task$init = _elm_lang$core$Task$succeed(
+	{ctor: '_Tuple0'});
+var _elm_lang$core$Task$onSelfMsg = F3(
+	function (_p7, _p6, _p5) {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '_Tuple0'});
+	});
+var _elm_lang$core$Task$command = _elm_lang$core$Native_Platform.leaf('Task');
+var _elm_lang$core$Task$Perform = function (a) {
+	return {ctor: 'Perform', _0: a};
+};
+var _elm_lang$core$Task$perform = F2(
+	function (toMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(_elm_lang$core$Task$map, toMessage, task)));
+	});
+var _elm_lang$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(
+					_elm_lang$core$Task$onError,
+					function (_p8) {
+						return _elm_lang$core$Task$succeed(
+							resultToMessage(
+								_elm_lang$core$Result$Err(_p8)));
+					},
+					A2(
+						_elm_lang$core$Task$andThen,
+						function (_p9) {
+							return _elm_lang$core$Task$succeed(
+								resultToMessage(
+									_elm_lang$core$Result$Ok(_p9)));
+						},
+						task))));
+	});
+var _elm_lang$core$Task$cmdMap = F2(
+	function (tagger, _p10) {
+		var _p11 = _p10;
+		return _elm_lang$core$Task$Perform(
+			A2(_elm_lang$core$Task$map, tagger, _p11._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Debug = function() {
@@ -8261,52 +8458,58 @@ var _elm_lang$html$Html_Events$Options = F2(
 	});
 
 var _user$project$SeatSaver$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
+	function (action, model) {
+		var _p0 = action;
 		var updateSeat = function (seatFromModel) {
 			return _elm_lang$core$Native_Utils.eq(seatFromModel.seatNo, _p0._0.seatNo) ? _elm_lang$core$Native_Utils.update(
 				seatFromModel,
 				{occupied: !seatFromModel.occupied}) : seatFromModel;
 		};
-		return A2(_elm_lang$core$List$map, updateSeat, model);
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_elm_lang$core$List$map, updateSeat, model),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
 	});
-var _user$project$SeatSaver$init = {
-	ctor: '::',
-	_0: {seatNo: 1, occupied: false},
-	_1: {
+var _user$project$SeatSaver$init = function () {
+	var seats = {
 		ctor: '::',
-		_0: {seatNo: 2, occupied: false},
+		_0: {seatNo: 1, occupied: false},
 		_1: {
 			ctor: '::',
-			_0: {seatNo: 3, occupied: false},
+			_0: {seatNo: 2, occupied: false},
 			_1: {
 				ctor: '::',
-				_0: {seatNo: 4, occupied: false},
+				_0: {seatNo: 3, occupied: false},
 				_1: {
 					ctor: '::',
-					_0: {seatNo: 5, occupied: false},
+					_0: {seatNo: 4, occupied: false},
 					_1: {
 						ctor: '::',
-						_0: {seatNo: 6, occupied: false},
+						_0: {seatNo: 5, occupied: false},
 						_1: {
 							ctor: '::',
-							_0: {seatNo: 7, occupied: false},
+							_0: {seatNo: 6, occupied: false},
 							_1: {
 								ctor: '::',
-								_0: {seatNo: 8, occupied: false},
+								_0: {seatNo: 7, occupied: false},
 								_1: {
 									ctor: '::',
-									_0: {seatNo: 9, occupied: false},
+									_0: {seatNo: 8, occupied: false},
 									_1: {
 										ctor: '::',
-										_0: {seatNo: 10, occupied: false},
+										_0: {seatNo: 9, occupied: false},
 										_1: {
 											ctor: '::',
-											_0: {seatNo: 11, occupied: false},
+											_0: {seatNo: 10, occupied: false},
 											_1: {
 												ctor: '::',
-												_0: {seatNo: 12, occupied: false},
-												_1: {ctor: '[]'}
+												_0: {seatNo: 11, occupied: false},
+												_1: {
+													ctor: '::',
+													_0: {seatNo: 12, occupied: false},
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -8317,8 +8520,9 @@ var _user$project$SeatSaver$init = {
 				}
 			}
 		}
-	}
-};
+	};
+	return {ctor: '_Tuple2', _0: seats, _1: _elm_lang$core$Platform_Cmd$none};
+}();
 var _user$project$SeatSaver$Seat = F2(
 	function (a, b) {
 		return {seatNo: a, occupied: b};
@@ -8358,8 +8562,15 @@ var _user$project$SeatSaver$view = function (model) {
 		},
 		A2(_elm_lang$core$List$map, _user$project$SeatSaver$seatItem, model));
 };
-var _user$project$SeatSaver$main = _elm_lang$html$Html$beginnerProgram(
-	{model: _user$project$SeatSaver$init, update: _user$project$SeatSaver$update, view: _user$project$SeatSaver$view})();
+var _user$project$SeatSaver$main = _elm_lang$html$Html$program(
+	{
+		init: _user$project$SeatSaver$init,
+		update: _user$project$SeatSaver$update,
+		view: _user$project$SeatSaver$view,
+		subscriptions: function (_p1) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	})();
 
 var Elm = {};
 Elm['SeatSaver'] = Elm['SeatSaver'] || {};
