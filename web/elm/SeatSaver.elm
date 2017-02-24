@@ -4,6 +4,8 @@ import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
 import Task exposing (Task)
+import Http
+import Json.Decode as Json exposing (field)
 
 
 main : Program Never Model Msg
@@ -28,23 +30,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    let
-        seats =
-            [ { seatNo = 1, occupied = False }
-            , { seatNo = 2, occupied = False }
-            , { seatNo = 3, occupied = False }
-            , { seatNo = 4, occupied = False }
-            , { seatNo = 5, occupied = False }
-            , { seatNo = 6, occupied = False }
-            , { seatNo = 7, occupied = False }
-            , { seatNo = 8, occupied = False }
-            , { seatNo = 9, occupied = False }
-            , { seatNo = 10, occupied = False }
-            , { seatNo = 11, occupied = False }
-            , { seatNo = 12, occupied = False }
-            ]
-    in
-        ( seats, Cmd.none )
+    ( [], fetchSeats )
 
 
 
@@ -53,6 +39,7 @@ init =
 
 type Msg
     = Toggle Seat
+    | SetSeats (Result Http.Error Model)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,6 +54,16 @@ update action model =
                         seatFromModel
             in
                 ( List.map updateSeat model, Cmd.none )
+
+        SetSeats (Ok seats) ->
+            let
+                newModel =
+                    seats
+            in
+                ( newModel, Cmd.none )
+
+        SetSeats (Err _) ->
+            ( model, Cmd.none )
 
 
 
@@ -92,3 +89,36 @@ seatItem seat =
             , onClick (Toggle seat)
             ]
             [ text (toString seat.seatNo) ]
+
+
+
+-- EFFECTS
+
+
+fetchSeats : Cmd Msg
+fetchSeats =
+    let
+        url =
+            "http://localhost:4000/api/seats"
+    in
+        Http.send SetSeats (Http.get url decodeSeats)
+
+
+
+--
+-- fetchSeats : Cmd Msg
+-- fetchSeats =
+--     Http.get "http://localhost:4000/api/seats" decodeSeats
+--         |> Task.mapError toString
+--         |> Task.perform ErrorOccurred SetSeats
+
+
+decodeSeats : Json.Decoder Model
+decodeSeats =
+    let
+        seat =
+            Json.map2 (\seatNo occupied -> (Seat seatNo occupied))
+                (field "seatNo" Json.int)
+                (field "occupied" Json.bool)
+    in
+        Json.at [ "data" ] (Json.list seat)

@@ -20,7 +20,9 @@ defmodule LearningElm.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", LearningElm do
-  #   pipe_through :api
-  # end
+  scope "/api", LearningElm do
+    pipe_through :api
+
+    resources "/seats", SeatController, except: [:new, :edit]
+  end
 end
