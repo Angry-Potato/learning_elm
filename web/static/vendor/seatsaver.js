@@ -8471,58 +8471,26 @@ var _user$project$SeatSaver$update = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$SeatSaver$init = function () {
-	var seats = {
-		ctor: '::',
-		_0: {seatNo: 1, occupied: false},
-		_1: {
-			ctor: '::',
-			_0: {seatNo: 2, occupied: false},
-			_1: {
-				ctor: '::',
-				_0: {seatNo: 3, occupied: false},
-				_1: {
-					ctor: '::',
-					_0: {seatNo: 4, occupied: false},
-					_1: {
-						ctor: '::',
-						_0: {seatNo: 5, occupied: false},
-						_1: {
-							ctor: '::',
-							_0: {seatNo: 6, occupied: false},
-							_1: {
-								ctor: '::',
-								_0: {seatNo: 7, occupied: false},
-								_1: {
-									ctor: '::',
-									_0: {seatNo: 8, occupied: false},
-									_1: {
-										ctor: '::',
-										_0: {seatNo: 9, occupied: false},
-										_1: {
-											ctor: '::',
-											_0: {seatNo: 10, occupied: false},
-											_1: {
-												ctor: '::',
-												_0: {seatNo: 11, occupied: false},
-												_1: {
-													ctor: '::',
-													_0: {seatNo: 12, occupied: false},
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	};
-	return {ctor: '_Tuple2', _0: seats, _1: _elm_lang$core$Platform_Cmd$none};
-}();
+var _user$project$SeatSaver$init = {
+	ctor: '_Tuple2',
+	_0: {ctor: '[]'},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$SeatSaver$seatLists = _elm_lang$core$Native_Platform.incomingPort(
+	'seatLists',
+	_elm_lang$core$Json_Decode$list(
+		A2(
+			_elm_lang$core$Json_Decode$andThen,
+			function (seatNo) {
+				return A2(
+					_elm_lang$core$Json_Decode$andThen,
+					function (occupied) {
+						return _elm_lang$core$Json_Decode$succeed(
+							{seatNo: seatNo, occupied: occupied});
+					},
+					A2(_elm_lang$core$Json_Decode$field, 'occupied', _elm_lang$core$Json_Decode$bool));
+			},
+			A2(_elm_lang$core$Json_Decode$field, 'seatNo', _elm_lang$core$Json_Decode$int))));
 var _user$project$SeatSaver$Seat = F2(
 	function (a, b) {
 		return {seatNo: a, occupied: b};

@@ -3,6 +3,7 @@ defmodule LearningElm.UserSocket do
 
   ## Channels
   # channel "room:*", LearningElm.RoomChannel
+  channel "seats:planner", LearningElm.SeatChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
